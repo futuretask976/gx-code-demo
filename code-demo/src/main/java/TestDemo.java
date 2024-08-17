@@ -1,6 +1,7 @@
 public class TestDemo {
     public static void main(String args[]) {
         // System.out.println(minPathSum(new int[][]{{1,3,1},{1,5,1},{4,2,1}}));
+        int[] arr = new int[]{0, 0, 0, 0, 0, 0};
         System.out.println(15 % 16);
     }
 
