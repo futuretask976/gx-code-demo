@@ -10,13 +10,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
 import javax.net.ssl.TrustManager;
@@ -32,9 +36,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,12 +52,7 @@ import com.gx.code.utils.http.https.X509TrustManagerPassAllCersVerify;
 
 public class HttpClientDemo {
 	public static void main(String args[]) throws Exception {
-		System.out.println(URLDecoder.decode(
-		        "note=&soid&complaintType1Id=10&itemId=2100727532081&scenarioId=1&vouchers=%5B%7B%22code%22%3A%22textareaVoucher%22%2C%22userData%22%3A%7B%22value%22%3A%22adfafadfa%22%7D%7D%2C%7B%22code%22%3A%22uploadVoucher%22%2C%22userData%22%3A%7B%22value%22%3A%5B%7B%22name%22%3A%22complaintcenter%2Fa2a522e2-6149-455e-a338-bd4f0dfba726.jpg%22%2C%22url%22%3A%22http%3A%2F%2Fcomplaint-userdata.alicdn.com%2Fcomplaintcenter%2Fa2a522e2-6149-455e-a338-bd4f0dfba726.jpg%254095Q%257Cwatermark%253D2%2526text%253D5Li-5oql5Lit5b-D%2526type%253DZmFuZ3poZW5naGVpdGk%2526size%253D60%2526color%253DI0ZGRkZGRg%2526p%253D5%2526t%253D35%2526s%253D20%3FExpires%3D1449000701%26OSSAccessKeyId%3DtwjrtQ1f5qnFkzG5%26Signature%3D0iK9oYFFYqjxMehhnBveZwOjKNo%253D%22%2C%22thumbUrl%22%3A%22http%3A%2F%2Fcomplaint-userdata.alicdn.com%2Fcomplaintcenter%2Fa2a522e2-6149-455e-a338-bd4f0dfba726.jpg%254095Q_160w_1l%3FExpires%3D1449000701%26OSSAccessKeyId%3DtwjrtQ1f5qnFkzG5%26Signature%3DVoWKqQkv7SRzQ73QUbpP2FriNiw%253D%22%7D%2C%7B%22name%22%3A%22complaintcenter%2F1e8e0f89-8cb2-48ec-a11f-a80150284c72.jpg%22%2C%22url%22%3A%22http%3A%2F%2Fcomplaint-userdata.alicdn.com%2Fcomplaintcenter%2F1e8e0f89-8cb2-48ec-a11f-a80150284c72.jpg%254095Q%257Cwatermark%253D2%2526text%253D5Li-5oql5Lit5b-D%2526type%253DZmFuZ3poZW5naGVpdGk%2526size%253D60%2526color%253DI0ZGRkZGRg%2526p%253D5%2526t%253D35%2526s%253D20%3FExpires%3D1449000702%26OSSAccessKeyId%3DtwjrtQ1f5qnFkzG5%26Signature%3DKdipL4z0ydt9NULPoy8SImRwkbs%253D%22%2C%22thumbUrl%22%3A%22http%3A%2F%2Fcomplaint-userdata.alicdn.com%2Fcomplaintcenter%2F1e8e0f89-8cb2-48ec-a11f-a80150284c72.jpg%254095Q_160w_1l%3FExpires%3D1449000702%26OSSAccessKeyId%3DtwjrtQ1f5qnFkzG5%26Signature%3DweHtR%252B2en3gcn4MWYHLdc8OiMa4%253D%22%7D%5D%7D%7D%2C%7B%22code%22%3A%22inputlistVoucher%22%2C%22userData%22%3A%7B%22value%22%3A%5B%22333333333%22%2C%22444444444444%22%5D%7D%7D%5D",
-		        "UTF-8"));
-		
 		HttpClientDemo httpClient = new HttpClientDemo();
-		httpClient.testSubmitComplaint();
 	}
 	
 	public void testSubmitComplaint() throws Exception {
